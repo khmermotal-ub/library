@@ -1,3 +1,4 @@
+using library.Data;
 using library.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -6,9 +7,19 @@ namespace library.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        // ASP.NET Core hands in the repository, because Program.cs registered it.
+        private readonly BookRepository _books;
+
+        public HomeController(BookRepository books)
         {
-            return View();
+            _books = books;
+        }
+
+        // async: the action waits for the database without holding up the server.
+        public async Task<IActionResult> Index()
+        {
+            ViewBag.BookCount = await _books.CountAsync();   // one number from the database
+            return View();                                   // show Views/Home/Index.cshtml
         }
 
         public IActionResult Privacy()
@@ -23,3 +34,4 @@ namespace library.Controllers
         }
     }
 }
+

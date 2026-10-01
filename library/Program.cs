@@ -1,3 +1,4 @@
+using library.Data;
 using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +14,7 @@ if (string.IsNullOrWhiteSpace(connectionString))
 }
 var dataSource = NpgsqlDataSource.Create(connectionString);
 builder.Services.AddSingleton(dataSource);
+builder.Services.AddScoped<BookRepository>();   // one repository per web request
 
 var app = builder.Build();
 
